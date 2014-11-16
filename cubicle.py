@@ -79,47 +79,53 @@ for f in options.field.split():
 
 #-------------------------------------------------------------------------------
 
-nr_atoms = int(cube_l[0][1])
+def main():
 
-dim_x = int(cube_l[0][ 5])
-dim_y = int(cube_l[0][ 9])
-dim_z = int(cube_l[0][13])
+    nr_atoms = int(cube_l[0][1])
 
-first = 17 + nr_atoms*5
-last  = len(cube_l[0]) - 1
+    dim_x = int(cube_l[0][ 5])
+    dim_y = int(cube_l[0][ 9])
+    dim_z = int(cube_l[0][13])
 
-polynomial_order = int(options.polynomial_order)
-derivative       = int(options.derivative)
+    first = 17 + nr_atoms*5
+    last  = len(cube_l[0]) - 1
 
-new_cube = []
+    polynomial_order = int(options.polynomial_order)
+    derivative       = int(options.derivative)
 
-for i in range(len(cube_l[0])):
-    if i < first:
-        new_cube.append(cube_l[0][i])
-    else:
-        if i < last + 1:
-            p_l = []
-            for cube in cube_l:
-                p_l.append(float(cube[i]))
-            new_cube.append(get_derivative(f_l, p_l, polynomial_order, derivative))
+    new_cube = []
 
-header = string.split(from_file(last_cube), '\n')
-for x in range(6 + nr_atoms):
-    print header[x]
+    for i in range(len(cube_l[0])):
+        if i < first:
+            new_cube.append(cube_l[0][i])
+        else:
+            if i < last + 1:
+                p_l = []
+                for cube in cube_l:
+                    p_l.append(float(cube[i]))
+                new_cube.append(get_derivative(f_l, p_l, polynomial_order, derivative))
 
-index = first
-for i in range(dim_x):
-    for j in range(dim_y):
-        s = ''
-        count = 0
-        for k in range(dim_z):
-            if count < 6:
-                s = s + '%13.5e' % new_cube[index]
-                count = count + 1
-            else:
-                print s
-                s = '%13.5e' % new_cube[index]
-                count = 1
-            if k == dim_z - 1:
-                print s
-            index = index + 1
+    header = string.split(from_file(last_cube), '\n')
+    for x in range(6 + nr_atoms):
+        print header[x]
+
+    index = first
+    for i in range(dim_x):
+        for j in range(dim_y):
+            s = ''
+            count = 0
+            for k in range(dim_z):
+                if count < 6:
+                    s = s + '%13.5e' % new_cube[index]
+                    count = count + 1
+                else:
+                    print s
+                    s = '%13.5e' % new_cube[index]
+                    count = 1
+                if k == dim_z - 1:
+                    print s
+                index = index + 1
+
+
+if __name__ == '__main__':
+   main()
